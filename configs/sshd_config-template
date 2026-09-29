@@ -1,0 +1,107 @@
+# OpenSSH Server Configuration (Template)
+# Este arquivo é um EXEMPLO de como configurar SSH no Ubuntu
+# Copiar para /etc/ssh/sshd_config (com backup antes!)
+
+# Fazer backup primeiro:
+# sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+
+# Porta (mudar da padrão 22)
+Port 2222
+
+# Apenas protocolo SSH v2 (mais seguro)
+Protocol 2
+
+# Endereço para escutar
+ListenAddress 0.0.0.0
+ListenAddress ::
+
+# HostKey files
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Lifetime and size of ephemeral version 1 server key
+# (não aplicável para SSH v2)
+
+# Ciphers and keying
+RekeyLimit default none
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Authentication
+LoginGraceTime 2m
+PermitRootLogin no
+StrictModes yes
+MaxAuthTries 6
+MaxSessions 10
+
+# Chaves públicas (recomendado)
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys .ssh/authorized_keys2
+
+# Disable password auth (usar chaves)
+PasswordAuthentication no
+PermitEmptyPasswords no
+
+# Disable other auth methods
+KbdInteractiveAuthentication no
+UsePAM yes
+
+# Restrict users (apenas admin)
+AllowUsers admin_teste
+
+# X11 Forwarding (opcional, para apps gráficos)
+X11Forwarding yes
+X11DisplayOffset 10
+
+# Environment variables
+# PrintMotd no
+PrintLastLog yes
+
+# TCPKeepAlive
+TCPKeepAlive yes
+
+# Permissão de tunnel
+AllowAgentForwarding yes
+AllowTcpForwarding yes
+
+# Gateway ports
+GatewayPorts no
+
+# X11UseLocalhost
+X11UseLocalhost yes
+
+# Compression
+Compression delayed
+
+# Client alive
+ClientAliveInterval 300
+ClientAliveCountMax 2
+
+# UseDNS (desabilitar para mais rápido)
+UseDNS no
+
+# PID file
+PidFile /var/run/sshd.pid
+
+# Max startups
+MaxStartups 10:30:60
+
+# Banner (opcional)
+# Banner /etc/ssh/banner.txt
+
+# SubSystem
+SubSystem sftp /usr/lib/openssh/sftp-server
+
+# Match blocks para regras específicas
+Match User adolescente
+    # Bloquear adolescente completamente
+    DenyUsers adolescente
+
+# Após editar, validar sintaxe:
+# sudo sshd -t
+
+# Depois, reiniciar SSH:
+# sudo systemctl restart ssh
